@@ -12,4 +12,5 @@
     <string name="back">Back</string>
     <string name="maps_unavailable">No maps application is available on this device.</string>
     <string name="browser_unavailable">No web browser is available on this device.</string>
+    <string name="select_university_to_continue">Select a university to view its departments.</string>
 </resources>

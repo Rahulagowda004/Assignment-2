@@ -1,43 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/university_activity_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
     android:background="@color/surface">
 
-    <TextView
+    <FrameLayout
+        android:id="@+id/university_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/select_university"
-        android:textColor="@color/primary"
-        android:textSize="26sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:text="@string/select_university_hint"
-        android:textColor="@color/text_secondary"
-        android:textSize="16sp" />
-
-    <ListView
-        android:id="@+id/university_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="12dp"
-        android:divider="@color/divider"
-        android:dividerHeight="1dp"
-        android:paddingTop="4dp"
-        android:clipToPadding="false" />
-
-    <Button
-        android:id="@+id/university_back_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="52dp"
-        android:text="@string/back"
-        android:textAllCaps="false" />
-</LinearLayout>
+        android:layout_height="match_parent" />
+</FrameLayout>
