@@ -14,22 +14,25 @@ public class UniversityActivity extends AppCompatActivity
     public static final String EXTRA_UNIVERSITY = "extra_university";
     private static final String STATE_SELECTED_UNIVERSITY = "selected_university";
     private static final String STATE_SELECTED_DEPARTMENT = "selected_department";
+    private static final String STATE_HAS_DEPARTMENT_SELECTION = "has_department_selection";
     private static final String UNIVERSITY_FRAGMENT_TAG = "university_list";
     private static final String DETAIL_FRAGMENT_TAG = "detail";
 
     private String selectedUniversity;
     private String selectedDepartment;
-    private boolean twoPane;
+    private boolean hasDepartmentSelection;
+    private boolean landscapeMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_university);
-        twoPane = findViewById(R.id.detail_container) != null;
+        landscapeMode = findViewById(R.id.department_container) != null;
 
         if (savedInstanceState != null) {
             selectedUniversity = savedInstanceState.getString(STATE_SELECTED_UNIVERSITY);
             selectedDepartment = savedInstanceState.getString(STATE_SELECTED_DEPARTMENT);
+            hasDepartmentSelection = savedInstanceState.getBoolean(STATE_HAS_DEPARTMENT_SELECTION);
         }
 
         if (getSupportFragmentManager().findFragmentByTag(UNIVERSITY_FRAGMENT_TAG) == null) {
@@ -39,8 +42,14 @@ public class UniversityActivity extends AppCompatActivity
                     .commit();
         }
 
-        if (twoPane && selectedUniversity == null) {
-            showLandscapePrompt();
+        if (landscapeMode) {
+            if (selectedUniversity == null) {
+                showInitialUniversityOnly();
+            } else if (!hasDepartmentSelection || selectedDepartment == null) {
+                showDepartmentFragment(selectedUniversity);
+            } else {
+                showProfessorFragment(selectedUniversity, selectedDepartment);
+            }
         }
     }
 
@@ -48,11 +57,9 @@ public class UniversityActivity extends AppCompatActivity
     public void onUniversitySelected(String universityName) {
         selectedUniversity = universityName;
         selectedDepartment = null;
-        if (twoPane) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_container,
-                            DepartmentListFragment.newInstance(universityName), DETAIL_FRAGMENT_TAG)
-                    .commit();
+        hasDepartmentSelection = false;
+        if (landscapeMode) {
+            showDepartmentFragment(universityName);
         } else {
             Intent intent = new Intent(this, DepartmentActivity.class);
             intent.putExtra(EXTRA_UNIVERSITY, universityName);
@@ -64,13 +71,9 @@ public class UniversityActivity extends AppCompatActivity
     public void onDepartmentSelected(String universityName, String departmentName) {
         selectedUniversity = universityName;
         selectedDepartment = departmentName;
-        if (twoPane) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_container,
-                            ProfessorDetailsFragment.newInstance(universityName, departmentName),
-                            DETAIL_FRAGMENT_TAG)
-                    .addToBackStack(null)
-                    .commit();
+        hasDepartmentSelection = true;
+        if (landscapeMode) {
+            showProfessorFragment(universityName, departmentName);
         } else {
             startProfessorActivity(universityName, departmentName);
         }
@@ -91,19 +94,37 @@ public class UniversityActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    private void showLandscapePrompt() {
+    private void showInitialUniversityOnly() {
+        setPaneVisibility(false, false);
+        removeFragmentInContainer(R.id.department_container);
+        removeFragmentInContainer(R.id.professor_container);
+    }
+
+    private void showDepartmentFragment(String universityName) {
+        setPaneVisibility(true, false);
+        removeFragmentInContainer(R.id.professor_container);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.detail_container, new LandscapePromptFragment(), DETAIL_FRAGMENT_TAG)
+                .replace(R.id.department_container,
+                        DepartmentListFragment.newInstance(universityName), DETAIL_FRAGMENT_TAG)
+                .commit();
+    }
+
+    private void showProfessorFragment(String universityName, String departmentName) {
+        setPaneVisibility(true, true);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.department_container,
+                        DepartmentListFragment.newInstance(universityName), "department_list")
+                .replace(R.id.professor_container,
+                        ProfessorDetailsFragment.newInstance(universityName, departmentName),
+                        "professor_details")
                 .commit();
     }
 
     public void showSelectedDepartment() {
-        if (twoPane && selectedUniversity != null) {
-            getSupportFragmentManager().popBackStack();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_container,
-                            DepartmentListFragment.newInstance(selectedUniversity), DETAIL_FRAGMENT_TAG)
-                    .commit();
+        if (landscapeMode && selectedUniversity != null) {
+            selectedDepartment = null;
+            hasDepartmentSelection = false;
+            showDepartmentFragment(selectedUniversity);
         } else {
             finish();
         }
@@ -113,15 +134,47 @@ public class UniversityActivity extends AppCompatActivity
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString(STATE_SELECTED_UNIVERSITY, selectedUniversity);
         outState.putString(STATE_SELECTED_DEPARTMENT, selectedDepartment);
+        outState.putBoolean(STATE_HAS_DEPARTMENT_SELECTION, hasDepartmentSelection);
         super.onSaveInstanceState(outState);
     }
 
-    public static class LandscapePromptFragment extends Fragment {
-        @Override
-        public android.view.View onCreateView(@NonNull android.view.LayoutInflater inflater,
-                                               android.view.ViewGroup container,
-                                               Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_detail_prompt, container, false);
+    public void showInitialUniversityOnlyFromBack() {
+        if (landscapeMode) {
+            selectedUniversity = null;
+            selectedDepartment = null;
+            hasDepartmentSelection = false;
+            showInitialUniversityOnly();
+        } else {
+            finish();
+        }
+    }
+
+    private void setPaneVisibility(boolean departmentVisible, boolean professorVisible) {
+        findViewById(R.id.department_container).setVisibility(
+                departmentVisible ? android.view.View.VISIBLE : android.view.View.GONE);
+        findViewById(R.id.professor_container).setVisibility(
+                professorVisible ? android.view.View.VISIBLE : android.view.View.GONE);
+        android.widget.LinearLayout.LayoutParams departmentParams =
+                (android.widget.LinearLayout.LayoutParams) findViewById(
+                        R.id.department_container).getLayoutParams();
+        android.widget.LinearLayout.LayoutParams professorParams =
+                (android.widget.LinearLayout.LayoutParams) findViewById(
+                        R.id.professor_container).getLayoutParams();
+        android.widget.LinearLayout.LayoutParams universityParams =
+                (android.widget.LinearLayout.LayoutParams) findViewById(
+                        R.id.university_container).getLayoutParams();
+        universityParams.weight = departmentVisible ? 0.31f : 1f;
+        departmentParams.weight = departmentVisible ? 0.31f : 0f;
+        professorParams.weight = professorVisible ? 0.38f : 0f;
+        findViewById(R.id.university_container).setLayoutParams(universityParams);
+        findViewById(R.id.department_container).setLayoutParams(departmentParams);
+        findViewById(R.id.professor_container).setLayoutParams(professorParams);
+    }
+
+    private void removeFragmentInContainer(int containerId) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(containerId);
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
         }
     }
 }

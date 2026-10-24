@@ -81,8 +81,13 @@ public class DepartmentListFragment extends Fragment {
             selectedDepartment = names.get(position);
             listener.onDepartmentSelected(universityName, selectedDepartment);
         });
-        view.findViewById(R.id.department_back_button).setOnClickListener(button ->
-                requireActivity().finish());
+        view.findViewById(R.id.department_back_button).setOnClickListener(button -> {
+            if (requireActivity() instanceof UniversityActivity) {
+                ((UniversityActivity) requireActivity()).showInitialUniversityOnlyFromBack();
+            } else {
+                requireActivity().finish();
+            }
+        });
     }
 
     @Override
