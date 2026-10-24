@@ -21,6 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".UniversityActivity" />
+        <activity android:name=".DepartmentActivity" />
+        <activity android:name=".ProfessorActivity" />
     </application>
 
 </manifest>
