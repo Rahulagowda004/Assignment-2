@@ -9,10 +9,14 @@ public final class UniversityRepository {
     public static final class Professor {
         public final String name;
         public final String description;
+        public final String website;
+        public final String mapsUrl;
 
-        Professor(String name, String description) {
+        Professor(String name, String description, String website, String mapsUrl) {
             this.name = name;
             this.description = description;
+            this.website = website;
+            this.mapsUrl = mapsUrl;
         }
     }
 
@@ -39,31 +43,65 @@ public final class UniversityRepository {
     private static final String SAMPLE_DESCRIPTION =
             "Sample faculty profile for demonstration purposes.";
 
-    private static Department department(String name, String professorName, String role) {
-        return new Department(name, new Professor(professorName, SAMPLE_DESCRIPTION + " " + role));
+    private static Department department(String name, String professorName, String role,
+            String website, String mapsUrl) {
+        return new Department(name, new Professor(
+                professorName, SAMPLE_DESCRIPTION + " " + role, website, mapsUrl));
     }
 
     private static final List<University> UNIVERSITIES = Collections.unmodifiableList(Arrays.asList(
             new University("University of Guelph",
-                    department("Computer Science", "Dr. Avery Morgan", "Teaches software systems and computing education."),
-                    department("Electrical Engineering", "Dr. Jordan Lee", "Teaches circuits, signals, and embedded systems."),
-                    department("Mechanical Engineering", "Dr. Taylor Singh", "Teaches design methods and sustainable machines."),
-                    department("Mathematics", "Dr. Riley Chen", "Teaches applied mathematics and mathematical modelling.")),
+                    department("Computer Science", "Dr. Avery Morgan", "Teaches software systems and computing education.",
+                            "https://www.uoguelph.ca/computing/",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+Guelph+Computer+Science"),
+                    department("Electrical Engineering", "Dr. Jordan Lee", "Teaches circuits, signals, and embedded systems.",
+                            "https://www.uoguelph.ca/engineering/",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+Guelph+Electrical+Engineering"),
+                    department("Mechanical Engineering", "Dr. Taylor Singh", "Teaches design methods and sustainable machines.",
+                            "https://www.uoguelph.ca/engineering/",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+Guelph+Mechanical+Engineering"),
+                    department("Mathematics", "Dr. Riley Chen", "Teaches applied mathematics and mathematical modelling.",
+                            "https://www.uoguelph.ca/mathstat/",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+Guelph+Mathematics+Statistics")),
             new University("University of Toronto",
-                    department("Computer Science", "Dr. Morgan Patel", "Teaches algorithms and software engineering."),
-                    department("Electrical Engineering", "Dr. Casey Wilson", "Teaches communications and digital systems."),
-                    department("Mechanical Engineering", "Dr. Alex Rivera", "Teaches robotics and engineering design."),
-                    department("Mathematics", "Dr. Jamie Brooks", "Teaches statistics and discrete mathematics.")),
+                    department("Computer Science", "Ishtiaque Ahmed", "Teaches algorithms and software engineering.",
+                            "https://web.cs.toronto.edu/people/faculty-directory",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+Toronto+Computer+Science"),
+                    department("Electrical Engineering", "Parham Aarabi", "Teaches communications and digital systems.",
+                            "https://www.ece.utoronto.ca/faculty/faculty-directory/",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+Toronto+Electrical+Computer+Engineering"),
+                    department("Mechanical Engineering", "Chris Beck", "Teaches robotics and engineering design.",
+                            "https://directory.utoronto.ca/",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+Toronto+Mechanical+Industrial+Engineering"),
+                    department("Mathematics", "James Bremer Jr.", "Teaches statistics and discrete mathematics.",
+                            "https://directory.utoronto.ca/",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+Toronto+Mathematics")),
             new University("University of Waterloo",
-                    department("Computer Science", "Dr. Quinn Foster", "Teaches programming languages and systems."),
-                    department("Electrical Engineering", "Dr. Samira Khan", "Teaches computer architecture and networks."),
-                    department("Mechanical Engineering", "Dr. Devon Clark", "Teaches automation and manufacturing."),
-                    department("Mathematics", "Dr. Robin Ellis", "Teaches numerical analysis and modelling.")),
+                    department("Computer Science", "N. Asokan", "Teaches programming languages and systems.",
+                            "https://uwaterloo.ca/computer-science/contacts",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+Waterloo+Computer+Science"),
+                    department("Electrical Engineering", "Sebastian Fischmeister", "Teaches computer architecture and networks.",
+                            "https://uwaterloo.ca/electrical-computer-engineering/contact-group/faculty",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+Waterloo+Electrical+Computer+Engineering"),
+                    department("Mechanical Engineering", "John Magliaro", "Teaches automation and manufacturing.",
+                            "https://uwaterloo.ca/mechanical-mechatronics-engineering/profile-type/faculty",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+Waterloo+Mechanical+Mechatronics+Engineering"),
+                    department("Mathematics", "Hans De Sterck", "Teaches numerical analysis and modelling.",
+                            "https://uwaterloo.ca/applied-mathematics/department-members/faculty-members",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+Waterloo+Faculty+of+Mathematics")),
             new University("University of British Columbia",
-                    department("Computer Science", "Dr. Cameron Park", "Teaches human-computer interaction and data systems."),
-                    department("Electrical Engineering", "Dr. Drew Martin", "Teaches renewable energy and control systems."),
-                    department("Mechanical Engineering", "Dr. Leslie Wong", "Teaches materials and mechanical design."),
-                    department("Mathematics", "Dr. Hayden Moore", "Teaches geometry and mathematical computation."))
+                    department("Computer Science", "Nick Harvey", "Teaches human-computer interaction and data systems.",
+                            "https://www.cs.ubc.ca/people/faculty",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+British+Columbia+Computer+Science"),
+                    department("Electrical Engineering", "Steven Wilton", "Teaches renewable energy and control systems.",
+                            "https://ece.ubc.ca/people/faculty/",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+British+Columbia+Electrical+Computer+Engineering"),
+                    department("Mechanical Engineering", "Yusuf Altintas", "Teaches materials and mechanical design.",
+                            "https://mech.ubc.ca/our-department/",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+British+Columbia+Mechanical+Engineering"),
+                    department("Mathematics", "Lior Silberman", "Teaches geometry and mathematical computation.",
+                            "https://www.math.ubc.ca/about-our-department",
+                            "https://www.google.com/maps/search/?api=1&query=University+of+British+Columbia+Mathematics"))
     ));
 
     private UniversityRepository() {
