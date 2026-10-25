@@ -34,6 +34,17 @@ public class UniversityActivity extends AppCompatActivity
             selectedDepartment = savedInstanceState.getString(STATE_SELECTED_DEPARTMENT);
             hasDepartmentSelection = savedInstanceState.getBoolean(STATE_HAS_DEPARTMENT_SELECTION);
         }
+
+        if (!landscapeMode && savedInstanceState != null && selectedUniversity != null) {
+            if (selectedDepartment != null && hasDepartmentSelection) {
+                startProfessorActivity(selectedUniversity, selectedDepartment);
+            } else {
+                startDepartmentActivity(selectedUniversity);
+            }
+            finish();
+            return;
+        }
+
         if (getSupportFragmentManager().findFragmentByTag(UNIVERSITY_FRAGMENT_TAG) == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.university_container, new UniversityListFragment(),
@@ -60,9 +71,7 @@ public class UniversityActivity extends AppCompatActivity
         if (landscapeMode) {
             showDepartmentFragment(universityName);
         } else {
-            Intent intent = new Intent(this, DepartmentActivity.class);
-            intent.putExtra(EXTRA_UNIVERSITY, universityName);
-            startActivity(intent);
+            startDepartmentActivity(universityName);
         }
     }
 
@@ -90,6 +99,12 @@ public class UniversityActivity extends AppCompatActivity
         intent.putExtra(DepartmentActivity.EXTRA_PROFESSOR, department.professor.name);
         intent.putExtra(DepartmentActivity.EXTRA_DESCRIPTION, department.professor.description);
         intent.putExtra(DepartmentActivity.EXTRA_WEBSITE, ProfessorActivity.SAMPLE_WEBSITE);
+        startActivity(intent);
+    }
+
+    private void startDepartmentActivity(String universityName) {
+        Intent intent = new Intent(this, DepartmentActivity.class);
+        intent.putExtra(EXTRA_UNIVERSITY, universityName);
         startActivity(intent);
     }
 
