@@ -64,6 +64,8 @@ public class ProfessorDetailsFragment extends Fragment {
         view.findViewById(R.id.professor_back_button).setOnClickListener(button -> {
             if (requireActivity() instanceof UniversityActivity) {
                 ((UniversityActivity) requireActivity()).showSelectedDepartment();
+            } else if (requireActivity() instanceof DepartmentActivity) {
+                ((DepartmentActivity) requireActivity()).showSelectedDepartment();
             } else {
                 requireActivity().finish();
             }

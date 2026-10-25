@@ -34,7 +34,6 @@ public class UniversityActivity extends AppCompatActivity
             selectedDepartment = savedInstanceState.getString(STATE_SELECTED_DEPARTMENT);
             hasDepartmentSelection = savedInstanceState.getBoolean(STATE_HAS_DEPARTMENT_SELECTION);
         }
-
         if (getSupportFragmentManager().findFragmentByTag(UNIVERSITY_FRAGMENT_TAG) == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.university_container, new UniversityListFragment(),
@@ -174,7 +173,7 @@ public class UniversityActivity extends AppCompatActivity
     private void removeFragmentInContainer(int containerId) {
         Fragment fragment = getSupportFragmentManager().findFragmentById(containerId);
         if (fragment != null) {
-            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            getSupportFragmentManager().beginTransaction().remove(fragment).commitNow();
         }
     }
 }

@@ -9,19 +9,19 @@
         android:id="@+id/university_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="0.25" />
 
     <FrameLayout
         android:id="@+id/department_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0"
+        android:layout_weight="0.35"
         android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/professor_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0"
+        android:layout_weight="0.40"
         android:visibility="gone" />
 </LinearLayout>
