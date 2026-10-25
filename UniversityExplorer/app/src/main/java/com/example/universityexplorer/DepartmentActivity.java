@@ -82,6 +82,34 @@ public class DepartmentActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    private void renderPortraitState() {
+        androidx.fragment.app.FragmentTransaction transaction =
+                getSupportFragmentManager().beginTransaction();
+        removeFragmentByTag(transaction, UNIVERSITY_FRAGMENT_TAG);
+        removeFragmentByTag(transaction, PROFESSOR_FRAGMENT_TAG);
+
+        if (selectedDepartment == null) {
+            transaction.replace(R.id.department_container,
+                    DepartmentListFragment.newInstance(selectedUniversity),
+                    DEPARTMENT_FRAGMENT_TAG);
+        } else {
+            transaction.replace(R.id.department_container,
+                    ProfessorDetailsFragment.newInstance(
+                            selectedUniversity, selectedDepartment),
+                    PROFESSOR_FRAGMENT_TAG);
+        }
+        transaction.commit();
+    }
+
+    private void removeFragmentByTag(
+            androidx.fragment.app.FragmentTransaction transaction, String tag) {
+        androidx.fragment.app.Fragment fragment =
+                getSupportFragmentManager().findFragmentByTag(tag);
+        if (fragment != null) {
+            transaction.remove(fragment);
+        }
+    }
+
     private void renderLandscapeState() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         androidx.fragment.app.FragmentTransaction transaction =
@@ -117,35 +145,6 @@ public class DepartmentActivity extends AppCompatActivity
         transaction.commit();
     }
 
-    private void renderPortraitState() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        androidx.fragment.app.FragmentTransaction transaction =
-                fragmentManager.beginTransaction();
-        removeFragmentByTag(fragmentManager, transaction, UNIVERSITY_FRAGMENT_TAG);
-        removeFragmentByTag(fragmentManager, transaction, DEPARTMENT_FRAGMENT_TAG);
-        removeFragmentByTag(fragmentManager, transaction, PROFESSOR_FRAGMENT_TAG);
-
-        if (selectedDepartment == null) {
-            transaction.replace(R.id.department_container,
-                    DepartmentListFragment.newInstance(selectedUniversity),
-                    DEPARTMENT_FRAGMENT_TAG);
-        } else {
-            transaction.replace(R.id.department_container,
-                    ProfessorDetailsFragment.newInstance(
-                            selectedUniversity, selectedDepartment),
-                    PROFESSOR_FRAGMENT_TAG);
-        }
-        transaction.commit();
-    }
-
-    private void removeFragmentByTag(FragmentManager fragmentManager,
-            androidx.fragment.app.FragmentTransaction transaction, String tag) {
-        androidx.fragment.app.Fragment fragment = fragmentManager.findFragmentByTag(tag);
-        if (fragment != null) {
-            transaction.remove(fragment);
-        }
-    }
-
     private void removeFragment(FragmentManager fragmentManager,
             androidx.fragment.app.FragmentTransaction transaction, int containerId) {
         androidx.fragment.app.Fragment fragment = fragmentManager.findFragmentById(containerId);
@@ -165,11 +164,7 @@ public class DepartmentActivity extends AppCompatActivity
 
     public void showSelectedDepartment() {
         selectedDepartment = null;
-        if (landscapeMode) {
-            renderLandscapeState();
-        } else {
-            renderPortraitState();
-        }
+        renderLandscapeState();
     }
 
     @Override
